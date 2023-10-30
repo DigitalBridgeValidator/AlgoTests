@@ -31,9 +31,9 @@ Don't forger to set up all parameters from `.env.example`.
 
 Upon completion, you'll receive a .csv file containing all results along with the hyperparameters in `/storage/brute-force`:
 
-<img width="1389" alt="Screenshot 2023-10-30 at 14 00 10-min" src="https://github.com/jesse-ai/project-template/assets/25667028/52f27c83-8190-43f7-a094-4c648c0571f6">
+<img width="1416" alt="Screenshot 2023-10-30 at 17 04 12-min" src="https://github.com/jesse-ai/jesse/assets/25667028/2981e7e3-77b6-4ac0-a2db-dd0f89a54fef">
 
-⚠️ Currently only works with one route, if your strategy has more than one route you can edit the source code [here](https://github.com/nick-dolan/brute-force-project-template/blob/9bb3cba256c4b10847f29b77cf61a9be075ecc72/brute-force.py#L48) by yourself.
+⚠️ Currently only works with one route, if your strategy has more than one route you can edit the source code [here](https://github.com/nick-dolan/brute-force-project-template/blob/5bc9b1492aa7a672df7844a67ba40866ac187631/brute-force.py#L48) by yourself.
 
 To launch the standard UI, type:
 
