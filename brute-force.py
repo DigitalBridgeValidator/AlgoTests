@@ -12,19 +12,19 @@ import os
 
 now = datetime.datetime.now()
 directory = './storage/brute-force/'
-strategy_name = ENV_VALUES['FS_STRATEGY']
+strategy_name = ENV_VALUES['BF_STRATEGY']
 filename = strategy_name + now.strftime("_%Y-%m-%d__%H-%M.csv")
-exchange_name = ENV_VALUES['FS_EXCHANGE']
-symbol = ENV_VALUES['FS_SYMBOL']
-timeframe = ENV_VALUES['FS_TIMEFRAME']
-warmup_candles_num = int(ENV_VALUES['FS_WARMUP_CANDLES'])
-start_date = ENV_VALUES['FS_START_DATE']
-finish_date = ENV_VALUES['FS_FINISH_DATE']
-starting_balance = ENV_VALUES['FS_STARTING_BALANCE']
-fee = ENV_VALUES['FS_FEE']
-type = ENV_VALUES['FS_TYPE']
-futures_leverage = ENV_VALUES['FS_FUTURES_LEVERAGE']
-futures_leverage_mode = ENV_VALUES['FS_FUTURES_LEVERAGE_MODE']
+exchange_name = ENV_VALUES['BF_EXCHANGE']
+symbol = ENV_VALUES['BF_SYMBOL']
+timeframe = ENV_VALUES['BF_TIMEFRAME']
+warmup_candles_num = int(ENV_VALUES['BF_WARMUP_CANDLES'])
+start_date = ENV_VALUES['BF_START_DATE']
+finish_date = ENV_VALUES['BF_FINISH_DATE']
+starting_balance = ENV_VALUES['BF_STARTING_BALANCE']
+fee = ENV_VALUES['BF_FEE']
+type = ENV_VALUES['BF_TYPE']
+futures_leverage = ENV_VALUES['BF_FUTURES_LEVERAGE']
+futures_leverage_mode = ENV_VALUES['BF_FUTURES_LEVERAGE_MODE']
 
 os.makedirs(directory, exist_ok=True)
 
@@ -179,7 +179,7 @@ def save_result_to_csv(hyperparameters, backtest_output):
 
 
 if __name__ == '__main__':
-    num_threads = int(ENV_VALUES['FS_CPU_COUNT']) if ENV_VALUES['FS_CPU_COUNT'] else multiprocessing.cpu_count()
+    num_threads = int(ENV_VALUES['BF_CPU_COUNT']) if ENV_VALUES['BF_CPU_COUNT'] else multiprocessing.cpu_count()
     lock = multiprocessing.Lock()
 
     with open('./storage/brute-force/' + filename, 'w', newline='') as initial_csv_file:
