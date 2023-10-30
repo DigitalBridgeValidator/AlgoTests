@@ -72,11 +72,16 @@ logging.basicConfig(level=logging.INFO)
 
 header_written = multiprocessing.Value('b', False)
 
+completed_counter = multiprocessing.Value('i', 0)
+counter_lock = multiprocessing.Lock()
 
-def init_globals(lock, header_flag):
-    global csv_lock, header_written
+
+def init_globals(lock, counter, header_flag):
+    global csv_lock, completed_counter, counter_lock, header_written
 
     csv_lock = lock
+    completed_counter = counter
+    counter_lock = lock  # using the same lock for csv and counter
     header_written = header_flag
 
 
@@ -90,6 +95,10 @@ def perform_calculation(hyperparameters):
     )
 
     save_result_to_csv(hyperparameters, backtest_output)
+
+    with counter_lock:
+        completed_counter.value += 1
+        print(f"\rProgress: {completed_counter.value} / {len(permutations)}", end='', flush=True)
 
 
 def save_result_to_csv(hyperparameters, backtest_output):
@@ -176,6 +185,9 @@ if __name__ == '__main__':
     with open('./storage/full-search/' + filename, 'w', newline='') as initial_csv_file:
         pass
 
-    with multiprocessing.Pool(num_threads, initializer=init_globals, initargs=(lock, header_written)) as pool:
+    # Print initial progress
+    print(f"Progress: 0 / {len(permutations)}", end='', flush=True)
+
+    with multiprocessing.Pool(num_threads, initializer=init_globals, initargs=(lock, completed_counter, header_written)) as pool:
         for _ in pool.imap_unordered(perform_calculation, permutations):
             pass
