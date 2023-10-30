@@ -35,6 +35,8 @@ Upon completion, you'll receive a .csv file containing all results along with th
     <img width="1389" alt="Screenshot 2023-10-30 at 14 00 10-min" src="https://github.com/jesse-ai/project-template/assets/25667028/52f27c83-8190-43f7-a094-4c648c0571f6">
 </a>
 
+⚠️ Currently only works with one route, if your strategy has more than one route you can edit the source code [here](https://github.com/nick-dolan/full-search-project-template/blob/9bb3cba256c4b10847f29b77cf61a9be075ecc72/full-search.py#L48) by yourself.
+
 To launch the standard UI, type:
 
 ```sh
