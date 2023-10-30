@@ -11,9 +11,9 @@ import os
 
 
 now = datetime.datetime.now()
-directory = './storage/full-search/'
-filename = now.strftime("full-search-%Y-%m-%d__%H-%M.csv")
+directory = './storage/brute-force/'
 strategy_name = ENV_VALUES['FS_STRATEGY']
+filename = strategy_name + now.strftime("_%Y-%m-%d__%H-%M.csv")
 exchange_name = ENV_VALUES['FS_EXCHANGE']
 symbol = ENV_VALUES['FS_SYMBOL']
 timeframe = ENV_VALUES['FS_TIMEFRAME']
@@ -159,7 +159,7 @@ def save_result_to_csv(hyperparameters, backtest_output):
     try:
         csv_lock.acquire()
 
-        with open('./storage/full-search/' + filename, 'a', newline='') as csv_file:
+        with open('./storage/brute-force/' + filename, 'a', newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
 
             # If the header hasn't been written, write it
@@ -182,7 +182,7 @@ if __name__ == '__main__':
     num_threads = int(ENV_VALUES['FS_CPU_COUNT']) if ENV_VALUES['FS_CPU_COUNT'] else multiprocessing.cpu_count()
     lock = multiprocessing.Lock()
 
-    with open('./storage/full-search/' + filename, 'w', newline='') as initial_csv_file:
+    with open('./storage/brute-force/' + filename, 'w', newline='') as initial_csv_file:
         pass
 
     # Print initial progress

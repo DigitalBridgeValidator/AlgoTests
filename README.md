@@ -1,4 +1,4 @@
-# Jesse Project Template with "Full Search" Feature
+# Jesse Project Template with "Brute-Force" Feature
 
 This template serves as a foundation for creating your own Jesse project, enabling a "brute force" approach to strategy optimization.
 
@@ -10,7 +10,7 @@ Assuming you have already installed the necessary environment dependencies and i
 
 ```sh
 # Change "my-project" to any name you prefer
-git clone https://github.com/nick-dolan/full-search-project-template my-project
+git clone https://github.com/nick-dolan/brute-force-project-template my-project
 # Create a .env file from the example
 cp .env.example .env
 ```
@@ -18,7 +18,7 @@ cp .env.example .env
 To initiate an exhaustive search, type:
 
 ```sh
-python full-search.py 
+python brute-force.py
 ```
 
 This setup works out-of-the-box with an example strategy from [example-strategies](https://github.com/jesse-ai/example-strategies).
@@ -29,13 +29,11 @@ The script generates all possible permutations from strategy hyperparameters. Yo
 
 Don't forger to set up all parameters from `.env.example`. 
 
-Upon completion, you'll receive a .csv file containing all results along with the hyperparameters in `/storage/full-search`:
+Upon completion, you'll receive a .csv file containing all results along with the hyperparameters in `/storage/brute-force`:
 
-<a href="https://raw.githubusercontent.com/nick-dolan/full-search-project-template/main/full-search-example.csv">
-    <img width="1389" alt="Screenshot 2023-10-30 at 14 00 10-min" src="https://github.com/jesse-ai/project-template/assets/25667028/52f27c83-8190-43f7-a094-4c648c0571f6">
-</a>
+<img width="1389" alt="Screenshot 2023-10-30 at 14 00 10-min" src="https://github.com/jesse-ai/project-template/assets/25667028/52f27c83-8190-43f7-a094-4c648c0571f6">
 
-⚠️ Currently only works with one route, if your strategy has more than one route you can edit the source code [here](https://github.com/nick-dolan/full-search-project-template/blob/9bb3cba256c4b10847f29b77cf61a9be075ecc72/full-search.py#L48) by yourself.
+⚠️ Currently only works with one route, if your strategy has more than one route you can edit the source code [here](https://github.com/nick-dolan/brute-force-project-template/blob/9bb3cba256c4b10847f29b77cf61a9be075ecc72/brute-force.py#L48) by yourself.
 
 To launch the standard UI, type:
 
