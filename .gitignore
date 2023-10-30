@@ -23,6 +23,7 @@
 /storage/json/*.json
 /storage/charts/*.png
 /storage/full-reports/*.html
+/storage/full-search/*.csv
 *.pyc
 /__pycache__
 /venv
