@@ -1,4 +1,4 @@
-# Jesse Project Template with "Brute-Force" Feature
+# Jesse Brute-Force script
 
 This template serves as a foundation for creating your own Jesse project, enabling a "brute force" approach to strategy optimization.
 
@@ -15,7 +15,7 @@ git clone https://github.com/nick-dolan/brute-force-project-template my-project
 cp .env.example .env
 ```
 
-To initiate an exhaustive search, type:
+To initiate a brute-force, type:
 
 ```sh
 python brute-force.py
@@ -23,11 +23,9 @@ python brute-force.py
 
 This setup works out-of-the-box with an example strategy from [example-strategies](https://github.com/jesse-ai/example-strategies).
 
-The script generates all possible permutations from strategy hyperparameters. You can specify the "step" in hyperparameters; if not specified, the default step value is 0.1.
+The script generates all possible permutations from strategy hyperparameters. You can specify the "step" in hyperparameters; if not specified, the default step value is `0.1` if float and `1` if int.
 
 <img width="810" alt="Screenshot 2023-10-30 at 14 11 42-min" src="https://github.com/jesse-ai/project-template/assets/25667028/b5e5137e-2a6c-465c-ae4f-dd8412ed58ec">
-
-Don't forger to set up all parameters from `.env.example`. 
 
 Upon completion, you'll receive a .csv file containing all results along with the hyperparameters in `/storage/brute-force`:
 
