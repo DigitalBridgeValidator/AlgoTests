@@ -8,7 +8,7 @@ import datetime
 from jesse.services.env import ENV_VALUES
 import utils
 import os
-
+import atexit
 
 now = datetime.datetime.now()
 directory = './storage/brute-force/'
@@ -58,7 +58,6 @@ candles = {
         'candles': candles_import,
     }
 }
-
 
 ranges = map(utils.generate_range_from_hyperparameter, strategy_hyperparameters)
 ranges = dict(ChainMap(*ranges))
@@ -178,6 +177,10 @@ def save_result_to_csv(hyperparameters, backtest_output):
         csv_lock.release()
 
 
+def exit_handler():
+    print('\nDone!')
+
+
 if __name__ == '__main__':
     num_threads = int(ENV_VALUES['BF_CPU_COUNT']) if ENV_VALUES['BF_CPU_COUNT'] else multiprocessing.cpu_count()
     lock = multiprocessing.Lock()
@@ -185,7 +188,8 @@ if __name__ == '__main__':
     with open('./storage/brute-force/' + filename, 'w', newline='') as initial_csv_file:
         pass
 
-    print('Strategy: ', strategy_name)
+    print(f'Strategy: {strategy_name}, {timeframe}, {symbol}')
+    print(f'Number of threads: {num_threads}')
 
     # Print initial progress
     print(f"Progress: 0 / {len(permutations)}", end='', flush=True)
@@ -193,3 +197,5 @@ if __name__ == '__main__':
     with multiprocessing.Pool(num_threads, initializer=init_globals, initargs=(lock, completed_counter, header_written)) as pool:
         for _ in pool.imap_unordered(perform_calculation, permutations):
             pass
+
+    atexit.register(exit_handler)
