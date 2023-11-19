@@ -18,15 +18,19 @@ def generate_range_from_hyperparameter(hp):
     min_of_range = hp['min']
     max_of_range = hp['max']
     param_type = hp['type']
+    default_step = 0.1 if param_type == float else 1
+    step = hp.get('step', default_step)
+
+    decimals = len(str(step).split('.')[1]) if '.' in str(step) and param_type == float else 0
 
     result = dict()
 
     if param_type == float:
-        step = hp['step'] if 'step' in hp else 0.1
         samples = round((max_of_range - min_of_range) / step) + 1
-        result[hp['name']] = list(np.linspace(min_of_range, max_of_range, num=samples))
+        range_values = np.linspace(min_of_range, max_of_range, num=samples)
+        result[hp['name']] = [round(val, decimals) for val in range_values]
     elif param_type == int:
-        result[hp['name']] = list(range(min_of_range, max_of_range + 1))
+        result[hp['name']] = list(range(min_of_range, max_of_range + 1, step))
 
     return result
 

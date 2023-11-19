@@ -185,6 +185,8 @@ if __name__ == '__main__':
     with open('./storage/brute-force/' + filename, 'w', newline='') as initial_csv_file:
         pass
 
+    print('Strategy: ', strategy_name)
+
     # Print initial progress
     print(f"Progress: 0 / {len(permutations)}", end='', flush=True)
 
