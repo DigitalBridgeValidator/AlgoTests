@@ -1,73 +1,23 @@
-import jesse.helpers as jh
-from jesse.research import backtest, get_candles
-from collections import ChainMap
-import csv
-import logging
-import multiprocessing
-import datetime
 from jesse.services.env import ENV_VALUES
-import utils
-import os
+from jesse.research import backtest
+import multiprocessing
+import logging
 import atexit
+import utils
+import csv
+import os
 
-now = datetime.datetime.now()
+filename = utils.generate_file_name()
 directory = './storage/brute-force/'
-strategy_name = ENV_VALUES['BF_STRATEGY']
-filename = strategy_name + now.strftime("_%Y-%m-%d__%H-%M.csv")
-exchange_name = ENV_VALUES['BF_EXCHANGE']
-symbol = ENV_VALUES['BF_SYMBOL']
-timeframe = ENV_VALUES['BF_TIMEFRAME']
-warmup_candles_num = int(ENV_VALUES['BF_WARMUP_CANDLES'])
-start_date = ENV_VALUES['BF_START_DATE']
-finish_date = ENV_VALUES['BF_FINISH_DATE']
-starting_balance = ENV_VALUES['BF_STARTING_BALANCE']
-fee = ENV_VALUES['BF_FEE']
-type = ENV_VALUES['BF_TYPE']
-futures_leverage = ENV_VALUES['BF_FUTURES_LEVERAGE']
-futures_leverage_mode = ENV_VALUES['BF_FUTURES_LEVERAGE_MODE']
 
 os.makedirs(directory, exist_ok=True)
 
-StrategyClass = jh.get_strategy_class(strategy_name)
-strategy_hyperparameters = StrategyClass().hyperparameters()
+config = utils.get_backtest_config()
+routes = utils.get_backtest_routes()
+warmup_candles, trading_candles = utils.get_backtest_candles()
+permutations = utils.generate_permutations()
 
-config = {
-    'starting_balance': starting_balance,
-    'fee': fee,
-    'type': type,
-    'futures_leverage': futures_leverage,
-    'futures_leverage_mode': futures_leverage_mode,
-    'exchange': exchange_name,
-    'warm_up_candles': warmup_candles_num
-}
-
-routes = [
-    {'exchange': exchange_name, 'strategy': StrategyClass, 'symbol': symbol, 'timeframe': timeframe}
-]
-
-extra_routes = []
-
-start_date = utils.get_candle_start_date(start_date, timeframe, warmup_candles_num)
-
-candles_import = get_candles(exchange_name, symbol, '1m', start_date=start_date, finish_date=finish_date)
-
-candles = {
-    jh.key(exchange_name, symbol): {
-        'exchange': exchange_name,
-        'symbol': symbol,
-        'candles': candles_import,
-    }
-}
-
-ranges = map(utils.generate_range_from_hyperparameter, strategy_hyperparameters)
-ranges = dict(ChainMap(*ranges))
-
-permutations = utils.generate_permutations(ranges)
-
-# # # # # # # # # # # # # # #
-# Start multiprocessing
-# # # # # # # # # # # # # # #
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.ERROR)
 
 header_written = multiprocessing.Value('b', False)
 
@@ -88,8 +38,9 @@ def perform_calculation(hyperparameters):
     backtest_output = backtest(
         config,
         routes,
-        extra_routes,
-        candles,
+        [],
+        trading_candles,
+        warmup_candles,
         hyperparameters=hyperparameters
     )
 
@@ -108,49 +59,7 @@ def save_result_to_csv(hyperparameters, backtest_output):
 
     metrics = backtest_output['metrics']
 
-    result = {
-        'Total trades': metrics['total'],
-        'Total Winning Trades': metrics['total_winning_trades'],
-        'Total Losing Trades': metrics['total_losing_trades'],
-        'Starting Balance': round(metrics['starting_balance'], 2),
-        'Finishing Balance': round(metrics['finishing_balance'], 2),
-        'Win Rate': round(metrics['win_rate'], 2),
-        'Ratio Avg Win/Loss': round(metrics['ratio_avg_win_loss'], 2),
-        'Longs Count': metrics['longs_count'],
-        'Longs %': round(metrics['longs_percentage'], 2),
-        'Shorts %': round(metrics['shorts_percentage'], 2),
-        'Shorts Count': metrics['shorts_count'],
-        'Fee': round(metrics['fee'], 2),
-        'Net Profit': round(metrics['net_profit'], 2),
-        'Net Profit %': round(metrics['net_profit_percentage'], 2),
-        'Average Win': round(metrics['average_win'], 2),
-        'Average Loss': round(metrics['average_loss'], 2),
-        'Expectancy': round(metrics['expectancy'], 2),
-        'Expectancy %': round(metrics['expectancy_percentage'], 2),
-        'Expected Net Profit Every 100 Trades': round(metrics['expected_net_profit_every_100_trades'], 2),
-        'Avg Holding Time': utils.format_duration(metrics['average_holding_period']),
-        'Avg Winning Holding Time': utils.format_duration(metrics['average_winning_holding_period']),
-        'Avg Losing Holding Time': utils.format_duration(metrics['average_losing_holding_period']),
-        'Gross Profit': round(metrics['gross_profit'], 2),
-        'Gross Loss': round(metrics['gross_loss'], 2),
-        'Max Drawdown': round(metrics['max_drawdown'], 2),
-        'Annual Return': round(metrics['annual_return'], 2),
-        'Sharpe Ratio': round(metrics['sharpe_ratio'], 2),
-        'Calmar Ratio': round(metrics['calmar_ratio'], 2),
-        'Sortino Ratio': round(metrics['sortino_ratio'], 2),
-        'Omega Ratio': round(metrics['omega_ratio'], 2),
-        'Serenity Index': round(metrics['serenity_index'], 2),
-        'Smart Sharpe': round(metrics['smart_sharpe'], 2),
-        'Smart Sortino': round(metrics['smart_sortino'], 2),
-        'Total Open Trades': metrics['total_open_trades'],
-        'Open PL': round(metrics['open_pl'], 2),
-        'Winning Streak': metrics['winning_streak'],
-        'Losing Streak': metrics['losing_streak'],
-        'Largest Losing Trade': round(metrics['largest_losing_trade'], 2),
-        'Largest Winning Trade': round(metrics['largest_winning_trade'], 2),
-        'Current Streak': metrics['current_streak'],
-        'Hyperparameters': hyperparameters_str
-    }
+    result = utils.prepare_metrics(metrics, hyperparameters_str)
 
     try:
         csv_lock.acquire()
@@ -175,7 +84,8 @@ def save_result_to_csv(hyperparameters, backtest_output):
 
 
 def exit_handler():
-    print('\nDone!')
+    if completed_counter.value == len(permutations):
+        print('\nAll tasks completed successfully!')
 
 
 if __name__ == '__main__':
@@ -185,14 +95,19 @@ if __name__ == '__main__':
     with open('./storage/brute-force/' + filename, 'w', newline='') as initial_csv_file:
         pass
 
-    print(f'Strategy: {strategy_name}, {timeframe}, {symbol}')
-    print(f'Number of threads: {num_threads}')
+    print(f"Strategy: {ENV_VALUES['BF_EXCHANGE']}, {ENV_VALUES['BF_TIMEFRAME']}, {ENV_VALUES['BF_SYMBOL']}")
+    print(f"Number of threads: {num_threads}")
 
     # Print initial progress
     print(f"Progress: 0 / {len(permutations)}", end='', flush=True)
 
-    with multiprocessing.Pool(num_threads, initializer=init_globals, initargs=(lock, completed_counter, header_written)) as pool:
-        for _ in pool.imap_unordered(perform_calculation, permutations):
-            pass
+    try:
+        with multiprocessing.Pool(num_threads, initializer=init_globals, initargs=(lock, completed_counter, header_written)) as pool:
+            for _ in pool.imap_unordered(perform_calculation, permutations):
+                pass
+    except KeyboardInterrupt:
+        print("\nExecution interrupted by user.")
+        pool.terminate()
+        pool.join()
 
     atexit.register(exit_handler)
