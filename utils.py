@@ -5,7 +5,7 @@ from jesse.services.env import ENV_VALUES
 from datetime import datetime
 from jesse.research import get_candles
 from collections import ChainMap
-
+from pydoc import locate
 
 def generate_range_from_hyperparameter(hp):
     min_of_range = hp['min']
@@ -60,10 +60,17 @@ def get_backtest_candles():
     start_date_str = ENV_VALUES['BF_START_DATE']
     finish_date_str = ENV_VALUES['BF_FINISH_DATE']
     config = get_backtest_config()
+    warm_up_candles = config['warm_up_candles']
 
     warmup_candles, trading_candles = get_candles(
-        exchange_name, symbol, timeframe, jh.date_to_timestamp(start_date_str), jh.date_to_timestamp(finish_date_str),
-        config['warm_up_candles'], caching=True, is_for_jesse=True
+        exchange_name,
+        symbol,
+        timeframe,
+        jh.date_to_timestamp(start_date_str),
+        jh.date_to_timestamp(finish_date_str),
+        warm_up_candles,
+        caching=True,
+        is_for_jesse=True
     )
 
     trading_candles = {
@@ -87,12 +94,12 @@ def get_backtest_candles():
 
 def get_backtest_routes():
     exchange_name = ENV_VALUES['BF_EXCHANGE']
-    strategy_name = ENV_VALUES['BF_STRATEGY']
     symbol = ENV_VALUES['BF_SYMBOL']
     timeframe = ENV_VALUES['BF_TIMEFRAME']
+    strategy = locate(f'strategies.{ENV_VALUES["BF_STRATEGY"]}.{ENV_VALUES["BF_STRATEGY"]}')
 
     routes = [
-        {'exchange': exchange_name, 'strategy': strategy_name, 'symbol': symbol, 'timeframe': timeframe}
+        {'exchange': exchange_name, 'strategy': strategy, 'symbol': symbol, 'timeframe': timeframe}
     ]
 
     return routes
@@ -150,7 +157,7 @@ def generate_file_name():
 
 
 def get_strategy_hyperparameters():
-    strategy = jh.get_strategy_class(ENV_VALUES['BF_STRATEGY'])
+    strategy = locate(f'strategies.{ENV_VALUES["BF_STRATEGY"]}.{ENV_VALUES["BF_STRATEGY"]}')
     strategy_hyperparameters = strategy().hyperparameters()
 
     return strategy_hyperparameters
