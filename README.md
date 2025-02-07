@@ -1,6 +1,6 @@
 # Jesse Brute-Force script
 
-This template serves as a foundation for creating your own Jesse project, enabling a "brute force" approach to strategy optimization.
+It's a regular Jesse's project template including a script for batch backtesting using the [Research](https://docs.jesse.trade/docs/research/#research) module.
 
 "Brute force" refers to a method where all possible configurations of a given strategy are tested to identify the optimal settings. Unlike heuristic methods, this approach relies on exhaustive computation to find the best solution based on specified criteria, without taking any shortcuts.
 
