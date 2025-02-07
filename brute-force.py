@@ -96,7 +96,7 @@ if __name__ == '__main__':
     with open('./storage/brute-force/' + filename, 'w', newline='') as initial_csv_file:
         pass
 
-    print(f"Strategy: {ENV_VALUES['BF_EXCHANGE']}, {ENV_VALUES['BF_TIMEFRAME']}, {ENV_VALUES['BF_SYMBOL']}")
+    print(f"Strategy: {ENV_VALUES['BF_STRATEGY']}, {ENV_VALUES['BF_EXCHANGE']}, {ENV_VALUES['BF_TIMEFRAME']}, {ENV_VALUES['BF_SYMBOL']}")
     print(f"Number of threads: {num_threads}")
 
     # Print initial progress
