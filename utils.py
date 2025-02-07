@@ -7,6 +7,7 @@ from jesse.research import get_candles
 from collections import ChainMap
 from pydoc import locate
 
+
 def generate_range_from_hyperparameter(hp):
     min_of_range = hp['min']
     max_of_range = hp['max']
@@ -106,54 +107,95 @@ def get_backtest_routes():
 
 
 def prepare_metrics(metrics, hyperparameters_str):
-    return {
-        'Total trades': metrics['total'],
-        'Total Winning Trades': metrics['total_winning_trades'],
-        'Total Losing Trades': metrics['total_losing_trades'],
-        'Starting Balance': round(metrics['starting_balance'], 2),
-        'Finishing Balance': round(metrics['finishing_balance'], 2),
-        'Win Rate': round(metrics['win_rate'], 2),
-        'Ratio Avg Win/Loss': round(metrics['ratio_avg_win_loss'], 2),
-        'Longs Count': metrics['longs_count'],
-        'Longs %': round(metrics['longs_percentage'], 2),
-        'Shorts %': round(metrics['shorts_percentage'], 2),
-        'Shorts Count': metrics['shorts_count'],
-        'Fee': round(metrics['fee'], 2),
-        'Net Profit': round(metrics['net_profit'], 2),
-        'Net Profit %': round(metrics['net_profit_percentage'], 2),
-        'Average Win': round(metrics['average_win'], 2),
-        'Average Loss': round(metrics['average_loss'], 2),
-        'Expectancy': round(metrics['expectancy'], 2),
-        'Expectancy %': round(metrics['expectancy_percentage'], 2),
-        'Expected Net Profit Every 100 Trades': round(metrics['expected_net_profit_every_100_trades'], 2),
-        'Avg Holding Time': format_duration(metrics['average_holding_period']),
-        'Avg Winning Holding Time': format_duration(metrics['average_winning_holding_period']),
-        'Avg Losing Holding Time': format_duration(metrics['average_losing_holding_period']),
-        'Gross Profit': round(metrics['gross_profit'], 2),
-        'Gross Loss': round(metrics['gross_loss'], 2),
-        'Max Drawdown': round(metrics['max_drawdown'], 2),
-        'Annual Return': round(metrics['annual_return'], 2),
-        'Sharpe Ratio': round(metrics['sharpe_ratio'], 2),
-        'Calmar Ratio': round(metrics['calmar_ratio'], 2),
-        'Sortino Ratio': round(metrics['sortino_ratio'], 2),
-        'Omega Ratio': round(metrics['omega_ratio'], 2),
-        'Serenity Index': round(metrics['serenity_index'], 2),
-        'Smart Sharpe': round(metrics['smart_sharpe'], 2),
-        'Smart Sortino': round(metrics['smart_sortino'], 2),
-        'Total Open Trades': metrics['total_open_trades'],
-        'Open PL': round(metrics['open_pl'], 2),
-        'Winning Streak': metrics['winning_streak'],
-        'Losing Streak': metrics['losing_streak'],
-        'Largest Losing Trade': round(metrics['largest_losing_trade'], 2),
-        'Largest Winning Trade': round(metrics['largest_winning_trade'], 2),
-        'Current Streak': metrics['current_streak'],
-        'Hyperparameters': hyperparameters_str
-    }
+    if metrics['total'] and metrics['total'] > 0:
+        return {
+            'Total trades': metrics['total'],
+            'Total Winning Trades': metrics['total_winning_trades'],
+            'Total Losing Trades': metrics['total_losing_trades'],
+            'Starting Balance': round(metrics['starting_balance'], 2),
+            'Finishing Balance': round(metrics['finishing_balance'], 2),
+            'Win Rate': round(metrics['win_rate'], 2),
+            'Ratio Avg Win/Loss': round(metrics['ratio_avg_win_loss'], 2),
+            'Longs Count': metrics['longs_count'],
+            'Longs %': round(metrics['longs_percentage'], 2),
+            'Shorts %': round(metrics['shorts_percentage'], 2),
+            'Shorts Count': metrics['shorts_count'],
+            'Fee': round(metrics['fee'], 2),
+            'Net Profit': round(metrics['net_profit'], 2),
+            'Net Profit %': round(metrics['net_profit_percentage'], 2),
+            'Average Win': round(metrics['average_win'], 2),
+            'Average Loss': round(metrics['average_loss'], 2),
+            'Expectancy': round(metrics['expectancy'], 2),
+            'Expectancy %': round(metrics['expectancy_percentage'], 2),
+            'Expected Net Profit Every 100 Trades': round(metrics['expected_net_profit_every_100_trades'], 2),
+            'Avg Holding Time': format_duration(metrics['average_holding_period']),
+            'Avg Winning Holding Time': format_duration(metrics['average_winning_holding_period']),
+            'Avg Losing Holding Time': format_duration(metrics['average_losing_holding_period']),
+            'Gross Profit': round(metrics['gross_profit'], 2),
+            'Gross Loss': round(metrics['gross_loss'], 2),
+            'Max Drawdown': round(metrics['max_drawdown'], 2),
+            'Annual Return': round(metrics['annual_return'], 2),
+            'Sharpe Ratio': round(metrics['sharpe_ratio'], 2),
+            'Calmar Ratio': round(metrics['calmar_ratio'], 2),
+            'Sortino Ratio': round(metrics['sortino_ratio'], 2),
+            'Omega Ratio': round(metrics['omega_ratio'], 2),
+            'Serenity Index': round(metrics['serenity_index'], 2),
+            'Total Open Trades': metrics['total_open_trades'],
+            'Open PL': round(metrics['open_pl'], 2),
+            'Winning Streak': metrics['winning_streak'],
+            'Losing Streak': metrics['losing_streak'],
+            'Largest Losing Trade': round(metrics['largest_losing_trade'], 2),
+            'Largest Winning Trade': round(metrics['largest_winning_trade'], 2),
+            'Current Streak': metrics['current_streak'],
+            'Hyperparameters': hyperparameters_str
+        }
+    else:
+        return {
+            'Total trades': 0,
+            'Total Winning Trades': "–",
+            'Total Losing Trades': "–",
+            'Starting Balance': "–",
+            'Finishing Balance': "–",
+            'Win Rate': "–",
+            'Ratio Avg Win/Loss': "–",
+            'Longs Count': "–",
+            'Longs %': "–",
+            'Shorts %': "–",
+            'Shorts Count': "–",
+            'Fee': "–",
+            'Net Profit': "–",
+            'Net Profit %': "–",
+            'Average Win': "–",
+            'Average Loss': "–",
+            'Expectancy': "–",
+            'Expectancy %': "–",
+            'Expected Net Profit Every 100 Trades': "–",
+            'Avg Holding Time': "–",
+            'Avg Winning Holding Time': "–",
+            'Avg Losing Holding Time': "–",
+            'Gross Profit': "–",
+            'Gross Loss': "–",
+            'Max Drawdown': "–",
+            'Annual Return': "–",
+            'Sharpe Ratio': "–",
+            'Calmar Ratio': "–",
+            'Sortino Ratio': "–",
+            'Omega Ratio': "–",
+            'Serenity Index': "–",
+            'Total Open Trades': "–",
+            'Open PL': "–",
+            'Winning Streak': "–",
+            'Losing Streak': "–",
+            'Largest Losing Trade': "–",
+            'Largest Winning Trade': "–",
+            'Current Streak': "–",
+            'Hyperparameters': hyperparameters_str
+        }
 
 
 def generate_file_name():
     now = datetime.now()
-    return ENV_VALUES['BF_EXCHANGE'] + now.strftime("_%Y-%m-%d__%H-%M.csv")
+    return f'{ENV_VALUES["BF_STRATEGY"]}_{ENV_VALUES["BF_TIMEFRAME"]}_{now.strftime("%Y-%m-%d__%H-%M.csv")}'
 
 
 def get_strategy_hyperparameters():

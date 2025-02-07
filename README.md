@@ -31,7 +31,7 @@ Upon completion, you'll receive a .csv file containing all results along with th
 
 <img width="1416" alt="Screenshot 2023-10-30 at 17 04 12-min" src="https://github.com/jesse-ai/jesse/assets/25667028/2981e7e3-77b6-4ac0-a2db-dd0f89a54fef">
 
-⚠️ Currently only works with one route, if your strategy has more than one route you can edit the source code [here](https://github.com/nick-dolan/brute-force-project-template/blob/5bc9b1492aa7a672df7844a67ba40866ac187631/brute-force.py#L48) by yourself.
+⚠️ Currently only works with one route.
 
 To launch the standard UI, type:
 

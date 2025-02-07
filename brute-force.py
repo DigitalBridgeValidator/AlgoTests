@@ -41,7 +41,8 @@ def perform_calculation(hyperparameters):
         [],
         trading_candles,
         warmup_candles,
-        hyperparameters=hyperparameters
+        hyperparameters=hyperparameters,
+        fast_mode=ENV_VALUES['BF_BACKTEST_FAST_MODE'] in ("1", "true", "yes", "on")
     )
 
     save_result_to_csv(hyperparameters, backtest_output)
