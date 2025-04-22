@@ -1,0 +1,29 @@
+version: '3.5'
+
+services:
+  ### PostgreSQL for local development ################################################
+  postgres-dev:
+    image: postgres:14-alpine
+    platform: linux/arm64/v8  # For Mac M1/M2
+    restart: always
+    environment:
+      - POSTGRES_USER=jesse_user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=jesse_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+    container_name: postgres-dev
+
+  ### Redis for local development ################################################
+  redis-dev:
+    image: redis:6-alpine
+    platform: linux/arm64/v8  # For Mac M1/M2
+    ports:
+      - "6379:6379"
+    container_name: redis-dev
+    command: redis-server --save "" --appendonly no
+    
+volumes:
+  postgres-dev-data:
